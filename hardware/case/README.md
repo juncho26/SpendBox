@@ -1,13 +1,15 @@
 # Case
 
-Put the 3D files for the case in this folder (`.step` for editing, `.stl` for printing), for example:
+3D-printable case, designed in Fusion. The files are in STEP format:
 
-```
-hardware/case/spendbox-case-front.stl
-hardware/case/spendbox-case-back.stl
-hardware/case/spendbox-case.step
-```
+| File | Part |
+|---|---|
+| SpendBox-Front.step | front shell with the screen window |
+| SpendBox-Back.step | back shell |
+| SpendBox-Button_Up.step | BOOT (up) button cap |
+| SpendBox-Button_Down.step | PWR (down) button cap |
 
-Add here: the printer and material you used, layer height, whether supports are needed, and a photo of
-the finished case. The case has to leave openings for the e-paper window, the two buttons (BOOT and PWR),
-the USB-C port, and room behind the board for the battery.
+Import them into your slicer, or export STL from any CAD program.
+
+Print settings: <printer, material, layer height, supports yes/no>
+Assembly: <how the board and battery fit>
