@@ -6,8 +6,7 @@
 
 I built this to understand where my money really goes and to budget better. Budgeting apps failed me for one reason: opening the app, typing the number and picking a name was annoying enough that I stopped logging. SpendBox removes that friction: the purchase is entered with **two buttons**, the device **shows your remaining daily limit at a glance**, and it sleeps between presses so a small battery can last a long time.
 
-![Screens](docs/images/screen-home.png)
-
+![SpendBox](docs/images/device.jpg)
 ## What it does
 
 - **Shows one number: what you have spent today**, plus a bar for what is left of today's limit and the days until payday.
