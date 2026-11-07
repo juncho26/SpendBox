@@ -11,5 +11,4 @@
 
 Import them into your slicer, or export STL from any CAD program.
 
-Print settings: <printer, material, layer height, supports yes/no>
-Assembly: <how the board and battery fit>
+Print settings: PLA, 0.08mm layers, supports
