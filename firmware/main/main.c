@@ -70,12 +70,15 @@ static uint32_t now_ms(void) { return (uint32_t)(esp_timer_get_time() / 1000); }
 static bool pressed(int pin) { return gpio_get_level((gpio_num_t)pin) == 0; }
 
 static void rails_wake(void) {                       // undo the holds set before sleep; battery rail stays on
-    gpio_hold_dis((gpio_num_t)PIN_VBAT_PWR);
+    rtc_gpio_hold_dis((gpio_num_t)PIN_VBAT_PWR);
     gpio_hold_dis((gpio_num_t)PIN_EPD_PWR);
     gpio_hold_dis((gpio_num_t)PIN_AUDIO_PWR);
     gpio_deep_sleep_hold_dis();
-    gpio_set_direction((gpio_num_t)PIN_VBAT_PWR, GPIO_MODE_OUTPUT);
-    gpio_set_level((gpio_num_t)PIN_VBAT_PWR, 1);
+    // The battery latch pin is driven through the RTC IO block, the only part of the chip that keeps driving a pin in deep
+    // sleep. Driving it from the normal GPIO block and then freezing it did not keep the board powered on battery alone.
+    rtc_gpio_init((gpio_num_t)PIN_VBAT_PWR);
+    rtc_gpio_set_direction((gpio_num_t)PIN_VBAT_PWR, RTC_GPIO_MODE_OUTPUT_ONLY);
+    rtc_gpio_set_level((gpio_num_t)PIN_VBAT_PWR, 1);
     gpio_config_t c = { .pin_bit_mask = (1ULL << PIN_BTN_UP) | (1ULL << PIN_BTN_DOWN), .mode = GPIO_MODE_INPUT,
                         .pull_up_en = GPIO_PULLUP_ENABLE };
     gpio_config(&c);
@@ -93,6 +96,7 @@ static void sleep_until_button(void) {
     esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_ALL);
     if (pressed(PIN_BTN_UP) || pressed(PIN_BTN_DOWN)) esp_sleep_enable_timer_wakeup(30ULL * 1000000ULL);   // a button is stuck down: waking on it would loop, so look again in 30 s
     else esp_sleep_enable_ext1_wakeup_io((1ULL << PIN_BTN_UP) | (1ULL << PIN_BTN_DOWN), ESP_EXT1_WAKEUP_ANY_LOW);
+    rtc_gpio_set_level((gpio_num_t)PIN_VBAT_PWR, 1);
     rtc_gpio_hold_en((gpio_num_t)PIN_VBAT_PWR);      // without this the board powers off in deep sleep
     esp_deep_sleep_start();
 }
