@@ -76,6 +76,12 @@ Scan the QR code from straight in front of the screen; at a steep angle it may n
 
 Every step saves on its own, so you can stop at any step.
 
+## Running on the battery
+
+- **Switch on:** with USB unplugged, hold **PWR** for about 3 seconds until the screen refreshes, then let go. After that the board sleeps and wakes on every button press by itself.
+- **Charging:** plug in a USB-C cable. The board's charge LED shows when it is charging.
+- **Battery icon:** the icon at the top right shows the charge. With no battery fitted it always shows full.
+
 ## Good to know
 
 - **The clock.** A real-time clock chip keeps the date. If the battery ever dies completely the clock may be lost; the screen then says **SET CLOCK**. Set it from the **Upcoming** tab of the website.
