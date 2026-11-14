@@ -76,9 +76,12 @@ static void icon_cash(Fb *f, int x, int y, Ink ink) {
 }
 
 void draw_home(Fb *f, const HomeData *h) {
-    if (h->food_at_risk) { draw_warning(f, h); return; }
     fb_clear(f);
-    fb_text(f, &F_SMALL, M, 18, h->date, INK_BLACK);
+    if (h->food_at_risk) {                                          // same screen and same controls as usual, with a warning tag instead of the date
+        const char *w = "! FOOD AT RISK"; int tw = text_width(&F_SMALL, w) + 10;
+        fb_fill(f, (Rect){ M, 5, tw, 15 }, INK_BLACK);
+        fb_text(f, &F_SMALL, M + 5, 17, w, INK_WHITE);
+    } else fb_text(f, &F_SMALL, M, 18, h->date, INK_BLACK);
     battery(f, M + CW - 19, 10, h->battery_pct);
     fb_text(f, &F_SMALL, M, 33, "SPENT TODAY", INK_BLACK);
     if (h->draft != 0) {                                            // inverted tag: +850 / -300
@@ -103,7 +106,8 @@ void draw_home(Fb *f, const HomeData *h) {
         fb_text(f, &F_SMALL, M, 190, "▲ ▼ SET", INK_BLACK);
         const char *r = "HOLD BOTH = NAME"; fb_text(f, &F_SMALL, M + CW - text_width(&F_SMALL, r), 190, r, INK_BLACK);
     } else {
-        char t[24]; if (h->low_batt) snprintf(t, sizeof t, "CHARGE FIRST"); else if (h->clock_lost) snprintf(t, sizeof t, "SET CLOCK"); else snprintf(t, sizeof t, "%dd to pay", h->days_left);
+        char t[24]; if (h->low_batt) snprintf(t, sizeof t, "CHARGE FIRST"); else if (h->clock_lost) snprintf(t, sizeof t, "SET CLOCK"); else if (h->food_at_risk) snprintf(t, sizeof t, "SHORT %d", (int)(h->min_food - (h->limit < 0 ? 0 : h->limit)));
+        else snprintf(t, sizeof t, "%dd to pay", h->days_left);
         fb_text(f, &F_SMALL, M, 190, t, INK_BLACK);
         if (h->credit > 0) {                                        // card credit left now: what the day's spending has not used yet
             char k[16]; int32_t left = h->credit - h->card_spent - h->draft; fmt_bar(left < 0 ? 0 : left, k, sizeof k);

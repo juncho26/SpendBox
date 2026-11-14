@@ -47,7 +47,7 @@ If you track a credit card, the device assumes **card** while the card still has
 
 ### Over the limit and "food at risk"
 
-If you spend more than today's limit the bar is full and the remaining number goes negative. If your money is not enough to keep the minimum amount of food for every remaining day, the screen shows **FOOD AT RISK** with how much you are short.
+If you spend more than today's limit the bar is full and the remaining number goes negative. If your money is not enough to keep the minimum amount of food for every remaining day, a black **! FOOD AT RISK** tag replaces the date and the bottom left shows how much you are **SHORT**. The screen works exactly as usual: you can still enter purchases, and hold both buttons for sync mode.
 
 ![Food at risk](images/screen-food-at-risk.png)
 

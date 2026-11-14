@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
     draw_home(&f, &card); save(&f, "screen-draft-cash-switched");
     HomeData over  = { "SAT 24 OCT", 80, 4700, 0, 4000, -700, 9, 1000, false, 4700, false, 0, 0, 0, false, false };
     draw_home(&f, &over); save(&f, "screen-over-limit");
-    HomeData risk  = { "SAT 24 OCT", 80, 280, 0, 680, 400, 9, 1000, true, 280, false, 0, 0, 0, false, false };
+    HomeData risk  = { "SAT 24 OCT", 80, 280, 150, 680, 400, 9, 1000, true, 280, false, 0, 0, 0, false, false };
     draw_home(&f, &risk); save(&f, "screen-food-at-risk");
     draw_picker(&f, 850, &ct, 1); save(&f, "screen-category-picker");
     draw_sync(&f, "SPENDBOX", "4F7K2M9Q", "192.168.4.1"); save(&f, "screen-sync");
