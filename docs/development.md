@@ -29,7 +29,7 @@ The `hal_*` files are the only code that touches hardware. To port to another bo
 make test
 ```
 
-Builds with `-fsanitize=address,undefined` and runs 199 checks. Please add a test for any change in `core/`.
+Builds with `-fsanitize=address,undefined` and runs 218 checks. Please add a test for any change in `core/`.
 
 ## Changing the screens
 

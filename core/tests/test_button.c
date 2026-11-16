@@ -28,6 +28,15 @@ int main(void) {
     // near-simultaneous press (40 ms apart) is a chord, not UP then DOWN
     button_init(&b); t = 1000; Seg c[] = {{1,0,40},{1,1,1200},{0,0,100}};
     k = run(&b, &t, c, 3, log); EQ(k, 2); EQ(log[0], EV_BOTH_HOLD); EQ(log[1], EV_BOTH_RELEASE);
+    // second button 200 ms late: the first press already counted, so it is undone and the chord still works
+    button_init(&b); t = 1000; Seg lt[] = {{1,0,200},{1,1,1200},{0,0,100}};
+    k = run(&b, &t, lt, 3, log); EQ(k, 4); EQ(log[0], EV_UP); EQ(log[1], EV_UNDO); EQ(log[2], EV_BOTH_HOLD); EQ(log[3], EV_BOTH_RELEASE);
+    // second button 100 ms late (inside the chord window): a clean chord, nothing to undo
+    button_init(&b); t = 1000; Seg lt2[] = {{1,0,80},{1,1,1200},{0,0,100}};
+    k = run(&b, &t, lt2, 3, log); EQ(k, 2); EQ(log[0], EV_BOTH_HOLD);
+    // up held a long time (repeating), then down added on purpose: no undo
+    button_init(&b); t = 1000; Seg lt3[] = {{1,0,900},{1,1,1200},{0,0,100}};
+    k = run(&b, &t, lt3, 3, log); for (int i = 0; i < k; i++) EQ(log[i] == EV_UNDO, 0);
     // chord held 3.2 s: BOTH_HOLD at 1 s, then LONG at 3 s
     button_init(&b); t = 1000; Seg d[] = {{1,1,3200},{0,0,100}};
     k = run(&b, &t, d, 2, log); EQ(k, 3); EQ(log[0], EV_BOTH_HOLD); EQ(log[1], EV_BOTH_HOLD_LONG); EQ(log[2], EV_BOTH_RELEASE);

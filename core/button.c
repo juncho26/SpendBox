@@ -37,7 +37,12 @@ bool button_poll(Btn *b, uint32_t now, bool up, bool dn, Event *out) {
         return false;
     case B_SINGLE:
         if (!any) { b->st = B_IDLE; return false; }
-        if (both) { b->st = B_CHORD; b->t0 = now; b->held_sent = b->long_sent = false; return false; }
+        if (both) {
+            bool undo = now - b->t0 < BTN_UNDO_MS;                // the first button already counted a press, but the second one was on its way
+            b->st = B_CHORD; b->t0 = now; b->held_sent = b->long_sent = false;
+            if (undo) { *out = ev(EV_UNDO); return true; }
+            return false;
+        }
         if (now - b->t0 >= BTN_REPEAT_MS && now - b->last_rep >= BTN_REPEAT_EVERY_MS) {
             b->last_rep = now; b->repeated = true; *out = ev(b->first == 0 ? EV_UP : EV_DOWN); return true;
         }

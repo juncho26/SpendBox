@@ -10,6 +10,12 @@ int main(void) {
     CatTable ct; cats_default(&ct);
     Ledger *l = malloc(sizeof *l); ledger_init(l);
     Ui u; ui_init(&u, 100); Date t = {2026,10,20};
+    // a stray press right before a chord is taken back (amount and picker position)
+    { Ui w; ui_init(&w, 100); for (int i = 0; i < 3; i++) ui_handle(&w, E(EV_UP), l, t, &ct);
+      ui_handle(&w, E(EV_UP), l, t, &ct); EQ(w.draft, 400); ui_handle(&w, E(EV_UNDO), l, t, &ct); EQ(w.draft, 300);
+      ui_handle(&w, E(EV_UNDO), l, t, &ct); EQ(w.draft, 300);                                  // only one press can be undone
+      ui_handle(&w, E(EV_BOTH_HOLD), l, t, &ct); ui_handle(&w, E(EV_VOICE_FAIL), l, t, &ct); EQ(w.screen, SCR_PICKER);
+      ui_handle(&w, E(EV_DOWN), l, t, &ct); EQ(w.cursor, 1); ui_handle(&w, E(EV_UNDO), l, t, &ct); EQ(w.cursor, 0); }
     // draft, then speak "food"
     for (int i = 0; i < 8; i++) ui_handle(&u, E(EV_UP), l, t, &ct);
     EQ(u.draft, 800); EQ(ledger_day_total(l, t), 0);            // unsaved: ledger untouched

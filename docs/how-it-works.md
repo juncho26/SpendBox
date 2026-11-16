@@ -51,7 +51,7 @@ The drawing code (`core/gfx`) is plain C with built-in bitmap fonts (Barlow Cond
 
 ## Buttons
 
-`core/button.c` is a small state machine that turns raw pin levels into events: up, down, auto-repeat while held, **both pressed together**, a quick **both tap**, **both held 1 s**, **both held 3 s**. It is tested on a PC without hardware. Holding adds 5 steps at a time, and the number is never allowed to run more than one step ahead of what the screen shows, so it stops where you let go.
+`core/button.c` is a small state machine that turns raw pin levels into events: up, down, auto-repeat while held, **both pressed together**, a quick **both tap**, **both held 1 s**, **both held 3 s**. It is tested on a PC without hardware. Pressing both buttons is never perfectly simultaneous, so if the second button lands up to 0.4 s after the first one already counted a press, that press is **undone** (`EV_UNDO`) and the chord goes ahead; the saved amount is never off by one click. Holding adds 5 steps at a time, and the number is never allowed to run more than one step ahead of what the screen shows, so it stops where you let go.
 
 ## Power
 

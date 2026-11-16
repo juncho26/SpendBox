@@ -2,7 +2,7 @@
 
 #define DRAFT_MAX 9999999
 
-void ui_init(Ui *u, int32_t step) { u->screen = SCR_HOME; u->draft = 0; u->step = step > 0 ? step : 100; u->cursor = 0; u->pay = 0; }
+void ui_init(Ui *u, int32_t step) { u->screen = SCR_HOME; u->draft = 0; u->step = step > 0 ? step : 100; u->cursor = 0; u->pay = 0; u->undo_ok = false; u->undo_draft = 0; u->undo_cursor = 0; }
 
 static UiResult commit(Ui *u, Category c, Ledger *l, Date today, const CatTable *cats) {
     int32_t amt = u->draft;
@@ -19,6 +19,16 @@ static UiResult commit(Ui *u, Category c, Ledger *l, Date today, const CatTable 
 UiResult ui_handle(Ui *u, Event ev, Ledger *l, Date today, const CatTable *cats) {
     Category act[MAX_CATS]; int n = cats_active(cats, act, MAX_CATS);
     UiResult r = { false, false, CAT_FOOD, 0, 0 };
+    if (ev.type == EV_UNDO) {                                     // a stray press right before a both-button chord: put it back
+        if (u->undo_ok) {
+            if (u->screen == SCR_HOME) { u->draft = u->undo_draft; r.redraw = true; }
+            else if (u->screen == SCR_PICKER) { u->cursor = u->undo_cursor; r.redraw = true; }
+        }
+        u->undo_ok = false;
+        return r;
+    }
+    u->undo_draft = u->draft; u->undo_cursor = u->cursor;
+    u->undo_ok = (ev.type == EV_UP || ev.type == EV_DOWN);
     switch (u->screen) {
     case SCR_HOME:
         if (ev.type == EV_UP || ev.type == EV_DOWN) {

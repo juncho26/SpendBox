@@ -5,7 +5,8 @@
 #define BUTTON_H
 #include "ui.h"
 
-#define BTN_CHORD_MS   60    // second button within this window = chord, not two presses
+#define BTN_UNDO_MS   400    // second button this soon after a single press fired = it was meant as a chord: undo the press
+#define BTN_CHORD_MS   100    // second button within this window = chord, not two presses
 #define BTN_DEBOUNCE_MS 12   // shortest press that counts as a tap
 #define BTN_REPEAT_MS  600   // hold a single button this long to start repeating
 #define BTN_REPEAT_EVERY_MS 120

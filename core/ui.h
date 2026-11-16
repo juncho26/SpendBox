@@ -6,6 +6,7 @@
 typedef enum { SCR_HOME, SCR_LISTENING, SCR_PICKER, SCR_SYNC } Screen;
 typedef enum {
     EV_UP, EV_DOWN,
+    EV_UNDO,             // the second button of a chord landed just after the first one already counted a press: take that press back
     EV_BOTH_TAP,         // both buttons pressed and released quickly (before the 1 s hold)
     EV_BOTH_HOLD,        // both buttons ~1 s
     EV_BOTH_HOLD_LONG,   // both buttons 3 s
@@ -22,6 +23,9 @@ typedef struct {
     int32_t step;        // amount per press, set on the website
     uint8_t cursor;      // picker row: FOOD/HOBBY/SCHOOL
     uint8_t pay;         // 1 = the draft was switched to the other payment with a both-button tap (tap again: back to normal)
+    int32_t undo_draft;  // state before the last up/down press, for EV_UNDO
+    uint8_t undo_cursor;
+    bool    undo_ok;     // the last handled event was an up/down press
     bool    credit_ok;   // set by the firmware: the card still has credit, so the normal choice is card and the other choice is cash
 } Ui;
 
